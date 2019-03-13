@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -22,22 +23,23 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name="user")
 @EntityListeners(AuditingEntityListener.class)
-@JsonIgnoreProperties(value={"createdAt","updatedAt"}, allowGetters=true)
+@JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, 
+        allowGetters = true)
 public class User {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
 	public Long id;
 	
-	@NotBlank
+	@NotNull
 	@Column(name="email")
 	public  String email;
 	
-	@NotBlank
+	@NotNull
 	@Column(name="password")
 	public String password;
 	
 	
-	@NotBlank
+	@NotNull
 	@Column(name="username")
 	public String username;
 	
@@ -57,14 +59,42 @@ public class User {
 	public String toString() {
 		return "User [email=" + email + ", password=" + password + ", username=" + username + "]";
 	}
-	public User(String email, String password, String username) {
+//	public User(String email, String password, String username) {
+//		super();
+//		this.email = email;
+//		this.password = password;
+//		this.username = username;
+//	}
+	public String getEmail() {
+		return email;
+	}
+	public User(Long id, @NotNull String email, @NotNull String password, @NotNull String username, Date createDate,
+			Date updatedDate) {
 		super();
+		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.username = username;
+		this.createDate = createDate;
+		this.updatedDate = updatedDate;
 	}
-	public String getEmail() {
-		return email;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Date getCreateDate() {
+		return createDate;
+	}
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+	public Date getUpdatedDate() {
+		return updatedDate;
+	}
+	public void setUpdatedDate(Date updatedDate) {
+		this.updatedDate = updatedDate;
 	}
 	public void setEmail(String email) {
 		this.email = email;
