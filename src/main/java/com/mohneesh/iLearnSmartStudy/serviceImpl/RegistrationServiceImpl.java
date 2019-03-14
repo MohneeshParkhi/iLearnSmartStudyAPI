@@ -1,37 +1,30 @@
 package com.mohneesh.iLearnSmartStudy.serviceImpl;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import com.mohneesh.iLearnSmartStudy.exceptions.NonUniqueResourceException;
 import com.mohneesh.iLearnSmartStudy.models.User;
 import com.mohneesh.iLearnSmartStudy.repository.RegistrationRepository;
 import com.mohneesh.iLearnSmartStudy.service.RegistrationService;
-import com.mohneesh.iLearnSmartStudy.utilityClasses.DateUtility;
 
+/**
+ * 
+ * @author mohneesh
+ *
+ */
 @Service
-public class RegistrationServiceImpl implements RegistrationService{
-     
-	@Autowired
-	 private RegistrationRepository registrationRepo;
+public class RegistrationServiceImpl implements RegistrationService {
 
-	 private Date createDate;  
-	 
-	 private Date updatedDate;
-	 
-	 @Autowired
-	 private DateUtility dateUtility;
-	 
-	 
-	 public void registerUser(User user){
-		createDate = dateUtility.getCreateDate();
-		updatedDate = dateUtility.getUpdatedDate();
-	
-		user.setCreateDate(createDate);
-		user.setUpdatedDate(updatedDate);
+	@Autowired
+	private RegistrationRepository registrationRepo;
+
+	public void registerUser(User user) throws NonUniqueResourceException {
 		
-		registrationRepo.save(user);
- }
+		User retrievedUser = registrationRepo.findByEmail(user.getEmail())
+				.orElseThrow(() -> new NonUniqueResourceException("Email ALready Exists"));
+
+	
+		User persistedUser = registrationRepo.save(user);
+	}
 }

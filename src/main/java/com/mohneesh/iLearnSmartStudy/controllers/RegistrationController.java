@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mohneesh.iLearnSmartStudy.dto.UserDto;
+import com.mohneesh.iLearnSmartStudy.exceptions.NonUniqueResourceException;
 import com.mohneesh.iLearnSmartStudy.modelMapper.RegistrationDtoConversion;
 import com.mohneesh.iLearnSmartStudy.models.User;
 import com.mohneesh.iLearnSmartStudy.service.RegistrationService;
@@ -30,7 +31,7 @@ public class RegistrationController {
 	}
 	
 	@RequestMapping(value="registerUser",method=RequestMethod.POST)
-	public ResponseEntity<?> getRegister(@RequestBody UserDto userDto){
+	public ResponseEntity<?> getRegister(@RequestBody UserDto userDto) throws NonUniqueResourceException{
 		User user = registrationDToconvert.convertToEntity(userDto);
 		resgisterService.registerUser(user);
 		return new ResponseEntity("User succesfully register", HttpStatus.OK);
