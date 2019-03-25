@@ -1,5 +1,8 @@
 package com.mohneesh.iLearnSmartStudy.serviceImpl;
 
+import java.util.NoSuchElementException;
+// import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +21,24 @@ public class RegistrationServiceImpl implements RegistrationService {
 
 	@Autowired
 	private RegistrationRepository registrationRepo;
-
-	public void registerUser(User user) throws NonUniqueResourceException {
-		
-		User retrievedUser = registrationRepo.findByEmail(user.getEmail())
-				.orElseThrow(() -> new NonUniqueResourceException("Email ALready Exists"));
-
 	
-		User persistedUser = registrationRepo.save(user);
+	
+	
+	private boolean getUser(User user) throws NoSuchElementException{
+		boolean retUser = registrationRepo.findByEmail(user.getEmail()).isPresent();
+		return retUser;
+	}
+	
+
+	public void registerUser(User user) throws NonUniqueResourceException, NoSuchElementException {
+	
+		boolean us = this.getUser(user);
+		System.out.print(us);
+		if(us) {
+			throw new NonUniqueResourceException("Resource existed");
+	
+		}else {
+			User persistedUser = registrationRepo.save(user);
+		}
 	}
 }

@@ -5,11 +5,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
+import com.mohneesh.iLearnSmartStudy.dto.LoginDto;
 import com.mohneesh.iLearnSmartStudy.dto.UserDto;
+import com.mohneesh.iLearnSmartStudy.models.Login;
 import com.mohneesh.iLearnSmartStudy.models.User;
 
+/**
+ * 
+ * @author mohneesh
+ *
+ */
 @Service
-public class RegistrationDtoConversion {
+public class ConvertDtoToModal {
     
 	@Autowired
 	ModelMapper modelMapper;
@@ -23,5 +30,10 @@ public class RegistrationDtoConversion {
 	public User convertToEntity(UserDto userDto) {
 		User user = modelMapper.map(userDto, User.class);
 		return user;
+	}
+	
+	public Login convertToLogin(LoginDto loginDto) {
+	Login login = modelMapper.map(loginDto, Login.class);
+	return login;
 	}
 }

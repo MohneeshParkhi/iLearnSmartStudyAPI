@@ -2,14 +2,15 @@ package com.mohneesh.iLearnSmartStudy.exceptions;
 
 public class NonUniqueResourceException extends Exception{
 
+	
+	private static final long serialVersionUID = 1L;
+
 	public NonUniqueResourceException() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public NonUniqueResourceException(String message) {
 		super(message);
-		// TODO Auto-generated constructor stub
 	}
 
 }

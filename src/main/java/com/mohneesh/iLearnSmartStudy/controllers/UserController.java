@@ -9,21 +9,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mohneesh.iLearnSmartStudy.dto.LoginDto;
 import com.mohneesh.iLearnSmartStudy.dto.UserDto;
 import com.mohneesh.iLearnSmartStudy.exceptions.NonUniqueResourceException;
-import com.mohneesh.iLearnSmartStudy.modelMapper.RegistrationDtoConversion;
+import com.mohneesh.iLearnSmartStudy.exceptions.UserNotExistException;
+import com.mohneesh.iLearnSmartStudy.modelMapper.ConvertDtoToModal;
+import com.mohneesh.iLearnSmartStudy.models.Login;
 import com.mohneesh.iLearnSmartStudy.models.User;
+import com.mohneesh.iLearnSmartStudy.service.LoginService;
 import com.mohneesh.iLearnSmartStudy.service.RegistrationService;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
-public class RegistrationController {
+public class UserController {
     @Autowired
 	RegistrationService resgisterService;
     
     @Autowired
-    RegistrationDtoConversion registrationDToconvert;
+    ConvertDtoToModal convertDto;
+    
+    @Autowired
+    LoginService loginService;
+    
+    boolean   userLoginStatus;
     
 	@RequestMapping(value="returnString", method=RequestMethod.GET)
 	public String CheckSwagger() {
@@ -32,9 +41,15 @@ public class RegistrationController {
 	
 	@RequestMapping(value="registerUser",method=RequestMethod.POST)
 	public ResponseEntity<?> getRegister(@RequestBody UserDto userDto) throws NonUniqueResourceException{
-		User user = registrationDToconvert.convertToEntity(userDto);
+		User user = convertDto.convertToEntity(userDto);
 		resgisterService.registerUser(user);
 		return new ResponseEntity("User succesfully register", HttpStatus.OK);
 	} 
 	
+	@RequestMapping(value="loginUser", method=RequestMethod.POST)
+	public ResponseEntity<?> getLoginUser(@RequestBody LoginDto loginDto) throws UserNotExistException{
+		Login login = convertDto.convertToLogin(loginDto);
+		userLoginStatus = loginService.getLoginUser(login);
+	    return new ResponseEntity<>(userLoginStatus,HttpStatus.OK);	
+	}
 }
