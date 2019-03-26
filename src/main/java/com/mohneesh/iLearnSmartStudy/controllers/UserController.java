@@ -32,7 +32,7 @@ public class UserController {
     @Autowired
     LoginService loginService;
     
-    boolean   userLoginStatus;
+    String   username;
     
 	@RequestMapping(value="returnString", method=RequestMethod.GET)
 	public String CheckSwagger() {
@@ -49,7 +49,7 @@ public class UserController {
 	@RequestMapping(value="loginUser", method=RequestMethod.POST)
 	public ResponseEntity<?> getLoginUser(@RequestBody LoginDto loginDto) throws UserNotExistException{
 		Login login = convertDto.convertToLogin(loginDto);
-		userLoginStatus = loginService.getLoginUser(login);
-	    return new ResponseEntity<>(userLoginStatus,HttpStatus.OK);	
+		this.username = loginService.getLoginUser(login);
+	    return new ResponseEntity<>(this.username,HttpStatus.OK);	
 	}
 }

@@ -22,20 +22,27 @@ public class LoginServiceImpl implements LoginService {
 	
 	private String email;
 	
-	private boolean checkUserExist(String email) {
-		boolean retUser = registrationRepo.findByEmail(email).isPresent();
+	private User checkUserExist(String email) {
+		User retUser = registrationRepo.findByEmail(email).get();
 		return retUser;
 	}
 	
 	@Override
-	public boolean getLoginUser(Login login) throws UserNotExistException{
+	public String getLoginUser(Login login) throws UserNotExistException{
 		email = login.getEmail();
-		boolean status = this.checkUserExist(email);
-		
-		if(status == false)
+		User retUserCredentials = this.checkUserExist(email);
+		boolean status = false;
+	
+		if(login.getEmail().equals(retUserCredentials.email) 
+				&& login.getPassword().equals(retUserCredentials.password)){
+			status = true;
+		}else {
+			status = false;
+		}
+		if(status== false)
 			throw new UserNotExistException("User does not exist, Please Register yourself");
 		else
-		return  status;
+		return  retUserCredentials.email;
 	}
 
 }

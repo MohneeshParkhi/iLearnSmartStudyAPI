@@ -9,5 +9,5 @@ import com.mohneesh.iLearnSmartStudy.models.Login;
  */
 public interface LoginService {
 
-	 boolean getLoginUser(Login login) throws UserNotExistException;
+	 String getLoginUser(Login login) throws UserNotExistException;
 }
