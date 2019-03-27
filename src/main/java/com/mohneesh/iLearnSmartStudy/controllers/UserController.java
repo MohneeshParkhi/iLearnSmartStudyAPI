@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mohneesh.iLearnSmartStudy.ResponseModels.LoginResponse;
+import com.mohneesh.iLearnSmartStudy.ResponseModels.RegistrationResponse;
 import com.mohneesh.iLearnSmartStudy.dto.LoginDto;
 import com.mohneesh.iLearnSmartStudy.dto.UserDto;
 import com.mohneesh.iLearnSmartStudy.exceptions.NonUniqueResourceException;
@@ -34,6 +36,9 @@ public class UserController {
     
     String   username;
     
+    
+
+    
 	@RequestMapping(value="returnString", method=RequestMethod.GET)
 	public String CheckSwagger() {
 		return "HOME";
@@ -41,15 +46,20 @@ public class UserController {
 	
 	@RequestMapping(value="registerUser",method=RequestMethod.POST)
 	public ResponseEntity<?> getRegister(@RequestBody UserDto userDto) throws NonUniqueResourceException{
+		System.out.println(userDto);
 		User user = convertDto.convertToEntity(userDto);
 		resgisterService.registerUser(user);
-		return new ResponseEntity("User succesfully register", HttpStatus.OK);
+		RegistrationResponse regiResp = new RegistrationResponse();
+		regiResp.setMessage("User succesfully register");
+		return new ResponseEntity<RegistrationResponse>(regiResp, HttpStatus.OK);
 	} 
 	
 	@RequestMapping(value="loginUser", method=RequestMethod.POST)
 	public ResponseEntity<?> getLoginUser(@RequestBody LoginDto loginDto) throws UserNotExistException{
 		Login login = convertDto.convertToLogin(loginDto);
 		this.username = loginService.getLoginUser(login);
-	    return new ResponseEntity<>(this.username,HttpStatus.OK);	
+	    LoginResponse loginResponse = new  LoginResponse(); 
+		loginResponse.setEmail(this.username);
+	    return new ResponseEntity<LoginResponse>(loginResponse,HttpStatus.OK);	
 	}
 }

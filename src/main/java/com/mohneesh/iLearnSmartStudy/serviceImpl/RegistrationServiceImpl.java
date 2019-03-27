@@ -33,7 +33,6 @@ public class RegistrationServiceImpl implements RegistrationService {
 	public void registerUser(User user) throws NonUniqueResourceException, NoSuchElementException {
 	
 		boolean us = this.getUser(user);
-		System.out.print(us);
 		if(us) {
 			throw new NonUniqueResourceException("Resource existed");
 	
