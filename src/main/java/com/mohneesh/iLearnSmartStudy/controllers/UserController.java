@@ -1,5 +1,7 @@
 package com.mohneesh.iLearnSmartStudy.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mohneesh.iLearnSmartStudy.ResponseModels.LoginResponse;
-import com.mohneesh.iLearnSmartStudy.ResponseModels.RegistrationResponse;
 import com.mohneesh.iLearnSmartStudy.dto.LoginDto;
 import com.mohneesh.iLearnSmartStudy.dto.UserDto;
 import com.mohneesh.iLearnSmartStudy.exceptions.NonUniqueResourceException;
@@ -34,11 +34,13 @@ public class UserController {
     @Autowired
     LoginService loginService;
     
-    String   username;
+    String   userLoginStatus;
     
     
-
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
     
+	
+	
 	@RequestMapping(value="returnString", method=RequestMethod.GET)
 	public String CheckSwagger() {
 		return "HOME";
@@ -46,20 +48,26 @@ public class UserController {
 	
 	@RequestMapping(value="registerUser",method=RequestMethod.POST)
 	public ResponseEntity<?> getRegister(@RequestBody UserDto userDto) throws NonUniqueResourceException{
-		System.out.println(userDto);
 		User user = convertDto.convertToEntity(userDto);
+		if(log.isDebugEnabled())
+			log.debug("REGISTERING THE USER");
+		
+		log.info("REGISTERING THE USER");
 		resgisterService.registerUser(user);
-		RegistrationResponse regiResp = new RegistrationResponse();
-		regiResp.setMessage("User succesfully register");
-		return new ResponseEntity<RegistrationResponse>(regiResp, HttpStatus.OK);
+		return new ResponseEntity("User succesfully register", HttpStatus.OK);
 	} 
 	
 	@RequestMapping(value="loginUser", method=RequestMethod.POST)
 	public ResponseEntity<?> getLoginUser(@RequestBody LoginDto loginDto) throws UserNotExistException{
 		Login login = convertDto.convertToLogin(loginDto);
-		this.username = loginService.getLoginUser(login);
-	    LoginResponse loginResponse = new  LoginResponse(); 
-		loginResponse.setEmail(this.username);
-	    return new ResponseEntity<LoginResponse>(loginResponse,HttpStatus.OK);	
+		log.info("LOGING USER WITH INPUT CREDENTIALS");
+		userLoginStatus = loginService.getLoginUser(login);
+	    return new ResponseEntity<>(userLoginStatus,HttpStatus.OK);	
 	}
+	
+//	@RequestMapping(value="addBlog", method = RequestMethod.POST)
+//	public void addBlog(@RequestBody BlogDto blogDto) {
+//		
+//	}
+	
 }
